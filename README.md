@@ -1,17 +1,15 @@
-# Batalha 3D — protótipo
+# Goku vs Black Freeza — V2
 
-Protótipo de batalha 3D para navegador usando Three.js. Inclui arena, dois lutadores geométricos provisórios, barras de HP, cronômetro, câmera arrastável e combate automático.
+Protótipo 3D para navegador, com lutadores procedurais estilizados, animações simples, HP, cronômetro, ataques especiais e painel de eventos simulados.
 
-## Publicar no GitHub + Render
-1. Crie um repositório no GitHub.
-2. Envie `index.html`, `style.css` e `main.js` para a raiz do repositório.
-3. No Render, escolha **New → Static Site** e conecte o repositório.
-4. Build Command: deixe vazio.
-5. Publish Directory: `.` (ponto).
-6. Publique e abra a URL gerada.
+## Atualizar no GitHub
+Substitua os arquivos `index.html`, `style.css` e `main.js` pelos arquivos desta versão e faça Commit changes. O Render fará novo deploy automaticamente.
 
-## Observações
-- É um protótipo visual: os lutadores são formas 3D originais provisórias, não modelos oficiais de Goku ou Black Freeza.
-- O combate é simulado localmente; comentários/presentes reais de uma LIVE ainda não estão conectados.
-- Three.js é carregado por CDN, então o navegador precisa de internet.
-- Para usar personagens reconhecíveis, utilize modelos 3D que você tenha direito de usar.
+## O que funciona
+- Arena e personagens 3D estilizados gerados pelo próprio código.
+- Combate automático, barras de vida e cronômetro.
+- Instinto Superior, Kamehameha e raio sombrio como efeitos visuais.
+- Botões de comentário e presente simulados para testar a interação.
+
+## Limites
+Os personagens ainda são modelos geométricos estilizados, não modelos 3D oficiais detalhados. O painel de comentários/presentes é apenas uma simulação local: não está conectado ao TikTok LIVE. Uma integração real depende de acesso oficial/autorizado a eventos da plataforma e deve respeitar os termos e requisitos de idade aplicáveis. Three.js é carregado por CDN.
