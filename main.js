@@ -409,4 +409,179 @@ function normalAttack() {
     attacker.isGoku ? 'Golpe de Goku' : 'Rajada de Black Freeza',
     7 + Math.random() * 6
   );
+} function reset() {
+  running = false;
+  elapsed = 0;
+  attackTimer = 0;
+  turn = 0;
+
+  goku.hp = 100;
+  frieza.hp = 100;
+
+  goku.root.position.x = goku.baseX;
+  frieza.root.position.x = frieza.baseX;
+
+  goku.transformed = false;
+  goku.root.scale.setScalar(1);
+  goku.auraMat.color.set(0x69dfff);
+  goku.auraMat.opacity = .12;
+
+  status.textContent = 'Arena pronta. Inicie a batalha!';
+  updateHud();
 }
+
+$('#start').onclick = () => {
+  if (goku.hp <= 0 || frieza.hp <= 0) reset();
+
+  running = true;
+  status.textContent = 'BATALHA INICIADA!';
+  feed('Batalha iniciada');
+};
+
+$('#pause').onclick = () => {
+  running = !running;
+  status.textContent = running
+    ? 'Batalha em andamento.'
+    : 'Batalha pausada.';
+};
+
+$('#reset').onclick = reset;
+
+$('#transform').onclick = () => {
+  goku.transformed = true;
+  goku.auraMat.color.set(0xd9f6ff);
+  goku.auraMat.opacity = .25;
+  goku.root.scale.setScalar(1.07);
+
+  feed('Goku ativou Instinto Superior!');
+  status.textContent = 'INSTINTO SUPERIOR!';
+};
+
+$('#kame').onclick = () =>
+  beam(goku, frieza, 0x57dfff, 'KAMEHAMEHA', 20);
+
+$('#nova').onclick = () =>
+  beam(frieza, goku, 0xb34cff, 'RAIO SOMBRIO', 18);
+
+document.querySelectorAll('[data-event]').forEach(button => {
+  button.onclick = () => {
+    if (button.dataset.event === 'comment') {
+      feed('Comentário simulado: GOKU!');
+      beam(goku, frieza, 0x5adfff, 'ATAQUE DO CHAT', 10);
+    } else {
+      feed('Presente simulado: energia especial!');
+      beam(goku, frieza, 0xffd45a, 'PODER DO PRESENTE', 24);
+    }
+  };
+});
+
+renderer.domElement.addEventListener('pointerdown', e => {
+  dragging = true;
+  lastX = e.clientX;
+});
+
+addEventListener('pointerup', () => dragging = false);
+
+addEventListener('pointermove', e => {
+  if (dragging) {
+    camAngle += (e.clientX - lastX) * .005;
+    lastX = e.clientX;
+  }
+});
+
+renderer.domElement.addEventListener('wheel', e => {
+  camera.position.z = THREE.MathUtils.clamp(
+    camera.position.z + e.deltaY * .01,
+    10,
+    25
+  );
+});
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const dt = Math.min(clock.getDelta(), .05);
+  const t = clock.elapsedTime;
+
+  [goku, frieza].forEach((fighter, i) => {
+    fighter.root.position.y = Math.sin(t * 2.2 + i) * .045;
+
+    fighter.root.rotation.y =
+      (i ? -.16 : .16) + Math.sin(t * 1.4 + i) * .035;
+
+    fighter.aura.scale.setScalar(
+      1 + Math.sin(t * 4 + i) * .055
+    );
+
+    fighter.halo.rotation.z = t * (i ? -.8 : .8);
+
+    fighter.arms.forEach((arm, j) => {
+      arm.rotation.z =
+        Math.sin(t * 2.8 + i + j) * .07 +
+        (running ? Math.sin(t * 8 + i) * .18 : 0);
+    });
+  });
+
+  if (running) {
+    elapsed += dt;
+    attackTimer += dt;
+
+    if (attackTimer > 2.1) {
+      attackTimer = 0;
+      normalAttack();
+    }
+
+    updateHud();
+  }
+
+  effects = effects.filter(effect => {
+    effect.life -= dt;
+    effect.mesh.material.opacity = Math.max(0, effect.life * 3);
+
+    if (effect.life <= 0) {
+      scene.remove(effect.mesh);
+      effect.mesh.geometry.dispose();
+      effect.mesh.material.dispose();
+      return false;
+    }
+
+    return true;
+  });
+
+  particles = particles.filter(particle => {
+    particle.life -= dt;
+
+    particle.mesh.position.addScaledVector(
+      particle.velocity,
+      dt * 12
+    );
+
+    particle.mesh.scale.setScalar(
+      Math.max(.01, particle.life)
+    );
+
+    if (particle.life <= 0) {
+      scene.remove(particle.mesh);
+      particle.mesh.geometry.dispose();
+      particle.mesh.material.dispose();
+      return false;
+    }
+
+    return true;
+  });
+
+  camera.position.x = Math.sin(camAngle) * 17;
+  camera.position.z = Math.cos(camAngle) * 17;
+  camera.lookAt(0, 1.5, 0);
+
+  renderer.render(scene, camera);
+}
+
+animate();
+reset();
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
