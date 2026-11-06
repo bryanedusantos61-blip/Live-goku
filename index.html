@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Batalha 3D — Goku vs Black Freeza</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <header><span>ARENA 3D</span><strong>GOKU <i>VS</i> BLACK FREEZA</strong><span id="timer">00:00</span></header>
+    <section class="bars">
+      <div class="fighter"><label>GUERREIRO AZUL</label><div class="track"><div id="hp1" class="fill blue"></div></div><small id="hp1txt">100%</small></div>
+      <div class="fighter right"><label>IMPERADOR SOMBRIO</label><div class="track"><div id="hp2" class="fill purple"></div></div><small id="hp2txt">100%</small></div>
+    </section>
+    <div id="status">A batalha vai começar...</div>
+    <footer>
+      <button id="start">Iniciar batalha</button>
+      <button id="pause">Pausar</button>
+      <button id="reset">Reiniciar</button>
+    </footer>
+  </div>
+  <div id="hint">Arraste para girar a câmera • Pinça/roda para aproximar</div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
